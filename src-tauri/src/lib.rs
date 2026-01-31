@@ -1,7 +1,7 @@
-use serde::{Deserialize, Serialize};
+pub mod models;
 use serde_json::{from_str, to_string_pretty};
 use crate::models::files::File;
-use crate::models::fields::Field;
+// use crate::models::fields::Field;
 use uuid::Uuid;
 
 fn get_json_data() -> Option<Vec<File>> {
@@ -21,12 +21,15 @@ fn save_json_data(data: &Vec<File>) {
     let json_string = match to_string_pretty(data) {
         Ok(json) => json,
         Err(_) => return,
+    };
+    if !std::path::Path::new("data").exists() {
+        std::fs::create_dir("data").expect("Unable to create directory");
     }
     std::fs::write("data/files.json", json_string).expect("Unable to write file");
 }
 
 #[tauri::command]
-fn create_file(file_name: &str) {
+fn create_file(title: &str) {
     let mut current_files: Vec<File> = match get_json_data() {
         Some(data) => data,
         None => Vec::new(),
@@ -35,8 +38,9 @@ fn create_file(file_name: &str) {
     let id = Uuid::new_v4().as_simple().to_string();
     let new_file = File {
         id: id,
-        name: String::from(file_name),
+        title: String::from(title),
         fields: Vec::new(),
+        last_modified: chrono::Utc::now().to_rfc3339(),
     };
     current_files.push(new_file);
     save_json_data(&current_files);

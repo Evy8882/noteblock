@@ -5,11 +5,19 @@ export default function Index() {
     return (
         <div className="container dark-theme">
             <header>
-                <h1>Seus arquivos:</h1>
+                <h1>Seus blocos:</h1>
             </header>
+            <div className="actions-bar">
+                <button
+                className="confirm-btn"
+                onClick={()=>{
+                    navigate("/new-block");
+                }}
+                >Novo bloco</button>
+            </div>
             <div className="files-list">
                 <div className="file-item">
-                    <h2>Título do arquivo 1</h2>
+                    <h2>Título do bloco 1</h2>
                     <p>Última modificação: 2024-06-01</p>
                     <div className="file-actions">
                         <button

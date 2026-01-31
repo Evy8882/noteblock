@@ -1,2 +1,2 @@
-mod fields;
-mod files;
+pub mod files;
+pub mod fields;
