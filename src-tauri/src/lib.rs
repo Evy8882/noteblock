@@ -6,7 +6,7 @@ use crate::controllers::storage_files::{get_json_data, save_json_data};
 use uuid::Uuid;
 
 #[tauri::command]
-fn create_file(title: &str) {
+fn create_file(title: &str) -> String {
     let mut current_files: Vec<File> = match get_json_data() {
         Some(data) => data,
         None => Vec::new(),
@@ -14,13 +14,14 @@ fn create_file(title: &str) {
 
     let id = Uuid::new_v4().as_simple().to_string();
     let new_file = File {
-        id: id,
+        id: id.clone(),
         title: String::from(title),
         fields: Vec::new(),
         last_modified: chrono::Utc::now().to_rfc3339(),
     };
     current_files.push(new_file);
     save_json_data(&current_files);
+    id
 }
 
 #[tauri::command]
@@ -31,6 +32,20 @@ fn get_all_files() -> Vec<File> {
     }
 }
 
+#[tauri::command]
+fn get_file(id: &str) -> Option<File> {
+    match get_json_data() {
+        Some(data) => {
+            for file in data {
+                if file.id == id {
+                    return Some(file);
+                }
+            }
+            return None;
+        }
+        None => return None,
+    }
+}
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -39,6 +54,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             create_file,
             get_all_files,
+            get_file,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

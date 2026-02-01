@@ -43,7 +43,7 @@ export default function Index() {
               <button
                 className="confirm-btn"
                 onClick={() => {
-                  navigate("/edit");
+                  navigate(`/edit/${block.id}`);
                 }}
               >
                 Editar

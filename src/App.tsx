@@ -9,7 +9,7 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Index />} />
-        <Route path="/edit" element={<EditFile />} />
+        <Route path="/edit/:id" element={<EditFile />} />
         <Route path="/new-block" element={<CreateBlock />} />
       </Routes>
     </Router>

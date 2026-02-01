@@ -111,7 +111,7 @@ header h1 {
   padding: 20px;
 }
 
-.edit-file-form input, .edit-file-form textarea{
+.edit-file-form input:not(.field-input), .edit-file-form textarea{
   padding: 10px;
   border: 1px solid var(--text-color);
   border-radius: 4px;
@@ -120,7 +120,7 @@ header h1 {
   color: var(--text-color);
   background-color: var(--secondary-background-color);
 }
-.edit-file-form input:focus, .edit-file-form textarea:focus{
+.edit-file-form input:not(.field-input):focus, .edit-file-form textarea:focus{
   outline: none;
   border-color: var(--primary-color);
 }
@@ -142,4 +142,16 @@ header h1 {
   justify-content: flex-end;
   padding: 0 20px;
   margin-top: 10px;
+}
+.field-input{
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 10px;
+  border-radius: 40;
+  font-size: 1rem;
+  min-height: 40px;
+  background-color: var(--secondary-background-color);
+  color: var(--text-color);
+  margin: 0;
 }
