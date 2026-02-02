@@ -1,8 +1,9 @@
-pub mod models;
 pub mod controllers;
-use crate::models::files::File;
+pub mod models;
+use crate::controllers::save_file::{update_file_fields, update_file_title};
 use crate::controllers::storage_files::{get_json_data, save_json_data};
-// use crate::models::fields::Field;
+use crate::models::fields::Field;
+use crate::models::files::File;
 use uuid::Uuid;
 
 #[tauri::command]
@@ -47,6 +48,28 @@ fn get_file(id: &str) -> Option<File> {
     }
 }
 
+#[tauri::command(rename_all = "snake_case")]
+fn update_file(file_id: &str, new_title: &str, new_fields: Vec<Field>){
+    let mut file: File = match get_file(file_id) {
+        Some(f) => f,
+        None => return,
+    };
+    file = update_file_title(file, new_title);
+    file = update_file_fields(file, new_fields);
+    let mut all_files: Vec<File> = match get_json_data() {
+        Some(data) => data,
+        None => Vec::new(),
+    };
+    // Salva o arquivo na lista
+    for ifile in &mut all_files {
+        if ifile.id == file.id {
+            *ifile = file;
+            break;
+        }
+    }
+    save_json_data(&all_files);
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -55,6 +78,7 @@ pub fn run() {
             create_file,
             get_all_files,
             get_file,
+            update_file
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
