@@ -2,7 +2,7 @@ use serde_json::{from_str, to_string_pretty};
 use crate::models::files::File;
 
 pub fn get_json_data() -> Option<Vec<File>> {
-    let file_content = match std::fs::read_to_string("data/files.json") {
+    let file_content = match std::fs::read_to_string("../data/files.json") {
         Ok(content) => content,
         Err(_) => String::from("[]"),
     };
@@ -19,8 +19,8 @@ pub fn save_json_data(data: &Vec<File>) {
         Ok(json) => json,
         Err(_) => return,
     };
-    if !std::path::Path::new("data").exists() {
-        std::fs::create_dir("data").expect("Unable to create directory");
+    if !std::path::Path::new("../data").exists() {
+        std::fs::create_dir("../data").expect("Unable to create directory");
     }
-    std::fs::write("data/files.json", json_string).expect("Unable to write file");
+    std::fs::write("../data/files.json", json_string).expect("Unable to write file");
 }
