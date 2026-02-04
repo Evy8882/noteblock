@@ -4,7 +4,7 @@ A note-taking application and text editor built with Tauri and React.
 ## Features
 - Create, edit, and manage text files.
 - Different text styles (headers, titles, subtitles, paragraphs).
-- Portuguese and English language support.
+- English, portuguese and spanish language support.
 - Dark and light themes.
 - Simple and intuitive user interface.
 - Styling options for text fields.
