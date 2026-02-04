@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { invoke } from "@tauri-apps/api/core";
 import File from "../types/File";
 import Field from "../types/Field";
+import CloseAlert from "../components/CloseAlert";
+import DeleteAlert from "../components/DeleteAlert";
 
 export default function EditFile() {
   const { id } = useParams<{ id: string }>();
@@ -11,7 +13,9 @@ export default function EditFile() {
   const [fields, setFields] = useState<Array<Field>>([]);
   const [loading, setLoading] = useState(true);
   const [focusFieldId, setFocusFieldId] = useState<string | null>(null);
-  const [dropdownOpen, setDropdownOpen] = useState(false); // Novo estado para o dropdown
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [closeAlertOpen , setCloseAlertOpen] = useState(false);
+  const [deleteAlertOpen , setDeleteAlertOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -222,6 +226,22 @@ export default function EditFile() {
 
   return (
     <div className="container dark-theme">
+      <CloseAlert
+        open={closeAlertOpen}
+        onConfirm={() => {
+          setCloseAlertOpen(false);
+          navigate("/");
+        }}
+        onCancel={() => setCloseAlertOpen(false)}
+      />
+      <DeleteAlert
+        open={deleteAlertOpen}
+        onConfirm={() => {
+          setDeleteAlertOpen(false);
+          navigate("/");
+        }}
+        onCancel={() => setDeleteAlertOpen(false)}
+      />
       <header>
         <div className="menu-contain">
           <div className="dropdown">
@@ -243,7 +263,7 @@ export default function EditFile() {
                 </button>
                 <button
                   onClick={() => {
-                    navigate("/");
+                    setCloseAlertOpen(true);
                   }}
                 >
                   Fechar
@@ -251,7 +271,7 @@ export default function EditFile() {
                 <button
                   className="danger-btn"
                   onClick={() => {
-                    navigate("/");
+                    setDeleteAlertOpen(true);
                   }}
                 >
                   Excluir
