@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Index from "./pages/Index.tsx";
 import EditFile from "./pages/Edit.tsx";
 import CreateBlock from "./pages/CreateBlock.tsx";
+import Settings from "./pages/Settings.tsx";
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
         <Route path="/" element={<Index />} />
         <Route path="/edit/:id" element={<EditFile />} />
         <Route path="/new-block" element={<CreateBlock />} />
+        <Route path="/settings" element={<Settings />} />
       </Routes>
     </Router>
   );

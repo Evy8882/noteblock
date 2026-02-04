@@ -1,2 +1,3 @@
 pub mod storage_files;
 pub mod save_file;
+pub mod storage_settings;

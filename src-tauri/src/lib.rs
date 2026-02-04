@@ -2,8 +2,10 @@ pub mod controllers;
 pub mod models;
 use crate::controllers::save_file::{update_file_fields, update_file_title};
 use crate::controllers::storage_files::{get_json_data, save_json_data};
+use crate::controllers::storage_settings::{get_settings_json, save_settings_json};
 use crate::models::fields::Field;
 use crate::models::files::File;
+use crate::models::settings::Settings;
 use uuid::Uuid;
 
 #[tauri::command]
@@ -70,6 +72,17 @@ fn update_file(file_id: &str, new_title: &str, new_fields: Vec<Field>){
     save_json_data(&all_files);
 }
 
+#[tauri::command]
+fn get_settings() -> Option<Settings> {
+    get_settings_json()
+}
+
+#[tauri::command]
+fn save_settings(settings: Settings) -> Settings {
+    save_settings_json(&settings);
+    settings
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -78,7 +91,9 @@ pub fn run() {
             create_file,
             get_all_files,
             get_file,
-            update_file
+            update_file,
+            get_settings,
+            save_settings
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

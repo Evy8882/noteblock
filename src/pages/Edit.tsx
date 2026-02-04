@@ -6,6 +6,8 @@ import File from "../types/File";
 import Field from "../types/Field";
 import CloseAlert from "../components/CloseAlert";
 import DeleteAlert from "../components/DeleteAlert";
+import { useTranslation } from "react-i18next";
+import Settings from "../types/Settings";
 
 export default function EditFile() {
   const { id } = useParams<{ id: string }>();
@@ -14,9 +16,34 @@ export default function EditFile() {
   const [loading, setLoading] = useState(true);
   const [focusFieldId, setFocusFieldId] = useState<string | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [closeAlertOpen , setCloseAlertOpen] = useState(false);
-  const [deleteAlertOpen , setDeleteAlertOpen] = useState(false);
+  const [closeAlertOpen, setCloseAlertOpen] = useState(false);
+  const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
+  const [settings, setSettings] = useState<Settings>({
+    theme: "dark",
+    autosave: false,
+    show_line_numbers: false,
+    language: "en",
+  });
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
+
+  const fetchSettings = async () => {
+    try {
+      const settings = await invoke<Settings>("get_settings");
+      if (!settings) {
+        navigate("/settings");
+      }else {
+        setSettings(settings);
+      }
+    } catch (error) {
+      alert(t("error_loading_settings") + error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -42,7 +69,7 @@ export default function EditFile() {
   async function fetchData() {
     setLoading(true);
     if (!id) {
-      alert("ID do arquivo não fornecido");
+      alert(t("file_id_not_provided"));
       navigate("/");
       return;
     }
@@ -55,11 +82,11 @@ export default function EditFile() {
           setFocusFieldId(file.fields[0].id);
         }
       } else {
-        alert("Arquivo não encontrado");
+        alert(t("file_not_found"));
         navigate("/");
       }
     } catch (error) {
-      alert("Erro ao carregar o arquivo: " + error);
+      alert(t("error_loading_file") + ": " + error);
       navigate("/");
     } finally {
       setLoading(false);
@@ -216,16 +243,16 @@ export default function EditFile() {
       setDropdownOpen(false);
       // navigate("/");
     } catch (error) {
-      alert("Erro ao salvar o arquivo: " + error);
+      alert(t("error_saving_file") + ": " + error);
     }
   }
 
   if (loading) {
-    return <div className="container dark-theme">Carregando...</div>;
+    return <div className={`container ${settings.theme}-theme`}>{t("loading")}</div>;
   }
 
   return (
-    <div className="container dark-theme">
+    <div className={`container ${settings.theme}-theme`}>
       <CloseAlert
         open={closeAlertOpen}
         onConfirm={() => {
@@ -249,24 +276,24 @@ export default function EditFile() {
               className="dropdown-toggle"
               onClick={() => setDropdownOpen((open) => !open)}
             >
-              Arquivo ▼
+              {t("file")} ▼
             </button>
             {dropdownOpen && (
               <div className="dropdown-menu">
-                <button onClick={handleSave}>Salvar</button>
+                <button onClick={handleSave}>{t("save")}</button>
                 <button
                   onClick={() => {
                     navigate("/");
                   }}
                 >
-                  Salvar como...
+                  {t("save_as")}
                 </button>
                 <button
                   onClick={() => {
                     setCloseAlertOpen(true);
                   }}
                 >
-                  Fechar
+                  {t("close")}
                 </button>
                 <button
                   className="danger-btn"
@@ -274,16 +301,16 @@ export default function EditFile() {
                     setDeleteAlertOpen(true);
                   }}
                 >
-                  Excluir
+                  {t("delete")}
                 </button>
               </div>
             )}
           </div>
         </div>
-        <h1>Editar arquivo:</h1>
+        <h1>{t("edit_file")}</h1>
       </header>
       <div className="edit-file-form">
-        <label htmlFor="file-title">Título do arquivo:</label>
+        <label htmlFor="file-title">{t("file_title")}</label>
         <input
           type="text"
           id="file-title"
@@ -296,99 +323,99 @@ export default function EditFile() {
             className={`style-btn${fields.length && fields[focusFieldId ? fields.findIndex((f) => f.id === focusFieldId) : 0]?.style === "text" ? " selected" : ""}`}
             onClick={() => {
               if (focusFieldId) {
-          setFields(
-            fields.map((f) =>
-              f.id === focusFieldId ? { ...f, style: "text" } : f,
-            ),
-          );
+                setFields(
+                  fields.map((f) =>
+                    f.id === focusFieldId ? { ...f, style: "text" } : f,
+                  ),
+                );
               }
             }}
             type="button"
           >
-            Normal
+            {t("normal")}
           </button>
           <button
             className={`style-btn${fields.length && fields[focusFieldId ? fields.findIndex((f) => f.id === focusFieldId) : 0]?.style === "bold" ? " selected" : ""}`}
             onClick={() => {
               if (focusFieldId) {
-          setFields(
-            fields.map((f) =>
-              f.id === focusFieldId ? { ...f, style: "bold" } : f,
-            ),
-          );
+                setFields(
+                  fields.map((f) =>
+                    f.id === focusFieldId ? { ...f, style: "bold" } : f,
+                  ),
+                );
               }
             }}
             type="button"
             style={{ fontWeight: "bold" }}
           >
-            Negrito
+            {t("bold")}
           </button>
           <button
             className={`style-btn${fields.length && fields[focusFieldId ? fields.findIndex((f) => f.id === focusFieldId) : 0]?.style === "italic" ? " selected" : ""}`}
             onClick={() => {
               if (focusFieldId) {
-          setFields(
-            fields.map((f) =>
-              f.id === focusFieldId ? { ...f, style: "italic" } : f,
-            ),
-          );
+                setFields(
+                  fields.map((f) =>
+                    f.id === focusFieldId ? { ...f, style: "italic" } : f,
+                  ),
+                );
               }
             }}
             type="button"
             style={{ fontStyle: "italic" }}
-            >
-            Itálico
+          >
+            {t("italic")}
           </button>
           <button
             className={`style-btn${fields.length && fields[focusFieldId ? fields.findIndex((f) => f.id === focusFieldId) : 0]?.style === "underline" ? " selected" : ""}`}
             onClick={() => {
               if (focusFieldId) {
-          setFields(
-            fields.map((f) =>
-              f.id === focusFieldId ? { ...f, style: "underline" } : f,
-            ),
-          );
+                setFields(
+                  fields.map((f) =>
+                    f.id === focusFieldId ? { ...f, style: "underline" } : f,
+                  ),
+                );
               }
             }}
             type="button"
             style={{ textDecoration: "underline" }}
           >
-            Sublinhado
+            {t("underline")}
           </button>
           <button
             className={`style-btn${fields.length && fields[focusFieldId ? fields.findIndex((f) => f.id === focusFieldId) : 0]?.style === "title" ? " selected" : ""}`}
             onClick={() => {
               if (focusFieldId) {
-          setFields(
-            fields.map((f) =>
-              f.id === focusFieldId ? { ...f, style: "title" } : f,
-            ),
-          );
+                setFields(
+                  fields.map((f) =>
+                    f.id === focusFieldId ? { ...f, style: "title" } : f,
+                  ),
+                );
               }
             }}
             type="button"
             style={{ fontSize: "1.2rem", fontWeight: "bold" }}
           >
-            Título
+            {t("title")}
           </button>
           <button
             className={`style-btn${fields.length && fields[focusFieldId ? fields.findIndex((f) => f.id === focusFieldId) : 0]?.style === "subtitle" ? " selected" : ""}`}
             onClick={() => {
               if (focusFieldId) {
-          setFields(
-            fields.map((f) =>
-              f.id === focusFieldId ? { ...f, style: "subtitle" } : f,
-            ),
-          );
+                setFields(
+                  fields.map((f) =>
+                    f.id === focusFieldId ? { ...f, style: "subtitle" } : f,
+                  ),
+                );
               }
             }}
             type="button"
             style={{ fontSize: "1.1rem", fontWeight: "bold" }}
           >
-            Subtítulo
+            {t("subtitle")}
           </button>
         </div>
-        <label htmlFor="file-content">Conteúdo do arquivo:</label>
+        <label htmlFor="file-content">{t("file_content")}</label>
         <div>
           {fields.map((field) => (
             <input
@@ -414,7 +441,7 @@ export default function EditFile() {
           ))}
         </div>
         <button onClick={handleSave} className="confirm-btn little-btn-right">
-          Salvar
+          {t("save")}
         </button>
       </div>
     </div>

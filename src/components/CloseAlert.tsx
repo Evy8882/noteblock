@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 type CloseAlertProps = {
     open: boolean;
@@ -8,16 +9,17 @@ type CloseAlertProps = {
 
 const CloseAlert: React.FC<CloseAlertProps> = ({ open, onConfirm, onCancel }) => {
     if (!open) return null;
+    const { t } = useTranslation();
 
     return (
         <div className="overlay">
             <div className="close-alert-modal">
-                <h2>Fechar arquivo?</h2>
-                <p>Todas as mudanças não salvas serão excluídas. Deseja mesmo fechar o arquivo?</p>
+                <h2>{t("closeAlert.header")}</h2>
+                <p>{t("closeAlert.message")}</p>
                 <div className="close-alert-actions">
-                    <button onClick={onCancel} className="close-alert-cancel-btn">Cancelar</button>
+                    <button onClick={onCancel} className="close-alert-cancel-btn">{t("closeAlert.cancel")}</button>
                     <button onClick={onConfirm} className="close-alert-confirm-btn">
-                        Fechar
+                        {t("closeAlert.confirm")}
                     </button>
                 </div>
             </div>
