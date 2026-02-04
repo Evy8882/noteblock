@@ -33,7 +33,7 @@ export default function EditFile() {
       const settings = await invoke<Settings>("get_settings");
       if (!settings) {
         navigate("/settings");
-      }else {
+      } else {
         setSettings(settings);
       }
     } catch (error) {
@@ -54,6 +54,9 @@ export default function EditFile() {
     if (fields.length === 0) {
       setFields([{ id: new_id, style: "text", content: "" }]);
       setFocusFieldId(new_id);
+    }
+    if (settings.autosave) {
+      handleSave();
     }
   }, [fields]);
 
@@ -248,7 +251,9 @@ export default function EditFile() {
   }
 
   if (loading) {
-    return <div className={`container ${settings.theme}-theme`}>{t("loading")}</div>;
+    return (
+      <div className={`container ${settings.theme}-theme`}>{t("loading")}</div>
+    );
   }
 
   return (
@@ -290,7 +295,12 @@ export default function EditFile() {
                 </button>
                 <button
                   onClick={() => {
-                    setCloseAlertOpen(true);
+                    if (!settings.autosave) {
+                      setCloseAlertOpen(true);
+                    }else{
+                      handleSave();
+                      navigate("/");
+                    }
                   }}
                 >
                   {t("close")}
@@ -417,27 +427,39 @@ export default function EditFile() {
         </div>
         <label htmlFor="file-content">{t("file_content")}</label>
         <div>
-          {fields.map((field) => (
-            <input
+          {fields.map((field, idx) => (
+            <div
               key={field.id}
-              type="text"
-              value={field.content}
-              className={"field-input" + ` ${field.style}-input`}
-              onChange={(e) => {
-                setFields(
-                  fields.map((f) =>
-                    f.id === field.id ? { ...f, content: e.target.value } : f,
-                  ),
-                );
-              }}
-              ref={(el) => {
-                if (el && field.id === focusFieldId) {
-                  el.focus();
-                }
-              }}
-              onKeyDown={(e) => handleFieldKeyDown(e, field)}
-              onFocus={() => setFocusFieldId(field.id)}
-            />
+              style={{ display: "flex", alignItems: "center" }}
+            >
+              {settings.show_line_numbers && (
+                <span
+                  className="line-number"
+                  style={{ marginRight: "8px", color: "#888" }}
+                >
+                  {idx + 1}
+                </span>
+              )}
+              <input
+                type="text"
+                value={field.content}
+                className={"field-input" + ` ${field.style}-input`}
+                onChange={(e) => {
+                  setFields(
+                    fields.map((f) =>
+                      f.id === field.id ? { ...f, content: e.target.value } : f,
+                    ),
+                  );
+                }}
+                ref={(el) => {
+                  if (el && field.id === focusFieldId) {
+                    el.focus();
+                  }
+                }}
+                onKeyDown={(e) => handleFieldKeyDown(e, field)}
+                onFocus={() => setFocusFieldId(field.id)}
+              />
+            </div>
           ))}
         </div>
         <button onClick={handleSave} className="confirm-btn little-btn-right">
