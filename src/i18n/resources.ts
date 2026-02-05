@@ -43,7 +43,7 @@ export const resources = {
             "loading": "Loading...",
             "file": "File",
             "save": "Save",
-            "save_as": "Save as...",
+            "export_as": "Export as...",
             "close": "Close",
             "edit_file": "Edit file:",
             "file_title": "File title:",
@@ -61,7 +61,10 @@ export const resources = {
             "createBlock.label": "Block title:",
             "createBlock.save": "Save",
             "createBlock.cancel": "Cancel",
-            "createBlock.error": "Error creating block:"
+            "createBlock.error": "Error creating block:",
+
+            "cancel": "Cancel",
+            "confirm": "Confirm"
         }
     },
     pt: {
@@ -108,7 +111,7 @@ export const resources = {
             "loading": "Carregando...",
             "file": "Arquivo",
             "save": "Salvar",
-            "save_as": "Salvar como...",
+            "export_as": "Exportar como...",
             "close": "Fechar",
             "edit_file": "Editar arquivo:",
             "file_title": "Título do arquivo:",
@@ -126,7 +129,10 @@ export const resources = {
             "createBlock.label": "Título do bloco:",
             "createBlock.save": "Salvar",
             "createBlock.cancel": "Cancelar",
-            "createBlock.error": "Erro ao criar o bloco:"
+            "createBlock.error": "Erro ao criar o bloco:",
+
+            "cancel": "Cancelar",
+            "confirm": "Confirmar"
         }
     },
     es: {
@@ -173,7 +179,7 @@ export const resources = {
             "loading": "Cargando...",
             "file": "Archivo",
             "save": "Guardar",
-            "save_as": "Guardar como...",
+            "export_as": "Exportar como...",
             "close": "Cerrar",
             "edit_file": "Editar archivo:",
             "file_title": "Título del archivo:",
@@ -191,7 +197,10 @@ export const resources = {
             "createBlock.label": "Título del bloque:",
             "createBlock.save": "Guardar",
             "createBlock.cancel": "Cancelar",
-            "createBlock.error": "Error al crear el bloque:"
+            "createBlock.error": "Error al crear el bloque:",
+
+            "cancel": "Cancelar",
+            "confirm": "Confirmar"
         }
     } 
 };

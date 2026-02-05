@@ -6,6 +6,7 @@ use crate::controllers::storage_settings::{get_settings_json, save_settings_json
 use crate::models::fields::Field;
 use crate::models::files::File;
 use crate::models::settings::Settings;
+use crate::controllers::export_files::*;
 use uuid::Uuid;
 
 #[tauri::command]
@@ -83,6 +84,16 @@ fn save_settings(settings: Settings) -> Settings {
     settings
 }
 
+#[tauri::command]
+fn export_as(file: File, format: &str) -> Result<String, String> {
+    match format {
+        "nbon" => export_as_nbon(file).map_err(|e| format!("Export error: {}", e)),
+        "txt" => export_as_txt(file).map_err(|e| format!("Export error: {}", e)),
+        "md" => export_as_md(file).map_err(|e| format!("Export error: {}", e)),
+        _ => Err(format!("Unsupported format: {}", format)),
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -93,7 +104,8 @@ pub fn run() {
             get_file,
             update_file,
             get_settings,
-            save_settings
+            save_settings,
+            export_as
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

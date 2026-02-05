@@ -8,6 +8,7 @@ import CloseAlert from "../components/CloseAlert";
 import DeleteAlert from "../components/DeleteAlert";
 import { useTranslation } from "react-i18next";
 import Settings from "../types/Settings";
+import ExportAlert from "../components/ExportAlert";
 
 export default function EditFile() {
   const { id } = useParams<{ id: string }>();
@@ -18,6 +19,7 @@ export default function EditFile() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [closeAlertOpen, setCloseAlertOpen] = useState(false);
   const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
+  const [exportAlertOpen, setExportAlertOpen] = useState(false);
   const [settings, setSettings] = useState<Settings>({
     theme: "dark",
     autosave: false,
@@ -274,6 +276,13 @@ export default function EditFile() {
         }}
         onCancel={() => setDeleteAlertOpen(false)}
       />
+      <ExportAlert
+        open={exportAlertOpen}
+        file={{ id: id || "", title, fields, last_modified: new Date().toISOString() }}
+        onCancel={() => {
+          setExportAlertOpen(false);
+        }}
+      />
       <header>
         <div className="menu-contain">
           <div className="dropdown">
@@ -288,16 +297,16 @@ export default function EditFile() {
                 <button onClick={handleSave}>{t("save")}</button>
                 <button
                   onClick={() => {
-                    navigate("/");
+                    setExportAlertOpen(true);
                   }}
                 >
-                  {t("save_as")}
+                  {t("export_as")}
                 </button>
                 <button
                   onClick={() => {
                     if (!settings.autosave) {
                       setCloseAlertOpen(true);
-                    }else{
+                    } else {
                       handleSave();
                       navigate("/");
                     }
