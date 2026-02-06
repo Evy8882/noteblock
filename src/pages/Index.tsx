@@ -85,7 +85,6 @@ export default function Index() {
               >
                 {t("edit")}
               </button>
-              <button className="danger-btn">{t("delete")}</button>
             </div>
           </div>
         ))}

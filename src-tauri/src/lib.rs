@@ -85,6 +85,22 @@ fn save_settings(settings: Settings) -> Settings {
 }
 
 #[tauri::command]
+fn delete_file(id: &str) {
+    let mut new_data: Vec<File> = Vec::new();
+    match get_json_data() {
+        Some(data) => {
+            for file in data {
+                if file.id != id {
+                    new_data.push(file);
+                }
+            }
+        }
+        None => return,
+    };
+    save_json_data(&new_data);
+}
+
+#[tauri::command]
 fn export_as(file: File, format: &str) -> Result<String, String> {
     match format {
         "nbon" => export_as_nbon(file).map_err(|e| format!("Export error: {}", e)),
@@ -105,7 +121,8 @@ pub fn run() {
             update_file,
             get_settings,
             save_settings,
-            export_as
+            export_as,
+            delete_file
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

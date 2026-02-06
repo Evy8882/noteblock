@@ -270,6 +270,7 @@ export default function EditFile() {
       />
       <DeleteAlert
         open={deleteAlertOpen}
+        fileId={id}
         onConfirm={() => {
           setDeleteAlertOpen(false);
           navigate("/");
