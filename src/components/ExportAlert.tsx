@@ -27,7 +27,7 @@ function ExportAlert({
           <button className="confirm-btn" onClick={() => handleExport("nbon")}>nbon</button>
           <button className="confirm-btn" onClick={() => handleExport("txt")}>txt</button>
           <button className="confirm-btn" onClick={() => handleExport("md")}>md</button>
-          <button disabled title="PDF export is not supported yet" className="confirm-btn" onClick={() => handleExport("pdf")}>pdf</button>
+          <button className="confirm-btn" onClick={() => handleExport("pdf")}>pdf</button>
           <button className="cancel-btn" onClick={onCancel}>
             {t("cancel")}
           </button>

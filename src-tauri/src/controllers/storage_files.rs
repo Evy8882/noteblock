@@ -1,20 +1,20 @@
 use serde_json::{from_str, to_string_pretty};
-use crate::models::files::File;
+use crate::models::files::Block;
 
-pub fn get_json_data() -> Option<Vec<File>> {
+pub fn get_json_data() -> Option<Vec<Block>> {
     let file_content = match std::fs::read_to_string("../data/files.json") {
         Ok(content) => content,
         Err(_) => String::from("[]"),
     };
 
-    let data = match from_str::<Vec<File>>(&file_content) {
+    let data = match from_str::<Vec<Block>>(&file_content) {
         Ok(data) => Some(data),
         Err(_) => None,
     };
     data
 }
 
-pub fn save_json_data(data: &Vec<File>) {
+pub fn save_json_data(data: &Vec<Block>) {
     let json_string = match to_string_pretty(data) {
         Ok(json) => json,
         Err(_) => return,

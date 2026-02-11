@@ -4,20 +4,20 @@ use crate::controllers::save_file::{update_file_fields, update_file_title};
 use crate::controllers::storage_files::{get_json_data, save_json_data};
 use crate::controllers::storage_settings::{get_settings_json, save_settings_json};
 use crate::models::fields::Field;
-use crate::models::files::File;
+use crate::models::files::Block;
 use crate::models::settings::Settings;
 use crate::controllers::export_files::*;
 use uuid::Uuid;
 
 #[tauri::command]
 fn create_file(title: &str) -> String {
-    let mut current_files: Vec<File> = match get_json_data() {
+    let mut current_files: Vec<Block> = match get_json_data() {
         Some(data) => data,
         None => Vec::new(),
     };
 
     let id = Uuid::new_v4().as_simple().to_string();
-    let new_file = File {
+    let new_file = Block {
         id: id.clone(),
         title: String::from(title),
         fields: Vec::new(),
@@ -29,7 +29,7 @@ fn create_file(title: &str) -> String {
 }
 
 #[tauri::command]
-fn get_all_files() -> Vec<File> {
+fn get_all_files() -> Vec<Block> {
     match get_json_data() {
         Some(data) => data,
         None => return Vec::new(),
@@ -37,7 +37,7 @@ fn get_all_files() -> Vec<File> {
 }
 
 #[tauri::command]
-fn get_file(id: &str) -> Option<File> {
+fn get_file(id: &str) -> Option<Block> {
     match get_json_data() {
         Some(data) => {
             for file in data {
@@ -53,13 +53,13 @@ fn get_file(id: &str) -> Option<File> {
 
 #[tauri::command(rename_all = "snake_case")]
 fn update_file(file_id: &str, new_title: &str, new_fields: Vec<Field>){
-    let mut file: File = match get_file(file_id) {
+    let mut file: Block = match get_file(file_id) {
         Some(f) => f,
         None => return,
     };
     file = update_file_title(file, new_title);
     file = update_file_fields(file, new_fields);
-    let mut all_files: Vec<File> = match get_json_data() {
+    let mut all_files: Vec<Block> = match get_json_data() {
         Some(data) => data,
         None => Vec::new(),
     };
@@ -86,7 +86,7 @@ fn save_settings(settings: Settings) -> Settings {
 
 #[tauri::command]
 fn delete_file(id: &str) {
-    let mut new_data: Vec<File> = Vec::new();
+    let mut new_data: Vec<Block> = Vec::new();
     match get_json_data() {
         Some(data) => {
             for file in data {
@@ -101,11 +101,12 @@ fn delete_file(id: &str) {
 }
 
 #[tauri::command]
-fn export_as(file: File, format: &str) -> Result<String, String> {
+fn export_as(file: Block, format: &str) -> Result<String, String> {
     match format {
         "nbon" => export_as_nbon(file).map_err(|e| format!("Export error: {}", e)),
         "txt" => export_as_txt(file).map_err(|e| format!("Export error: {}", e)),
         "md" => export_as_md(file).map_err(|e| format!("Export error: {}", e)),
+        "pdf" => export_as_pdf(file).map_err(|e| format!("Export error: {}", e)),
         _ => Err(format!("Unsupported format: {}", format)),
     }
 }
