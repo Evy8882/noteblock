@@ -64,7 +64,8 @@ export const resources = {
             "createBlock.error": "Error creating block:",
 
             "cancel": "Cancel",
-            "confirm": "Confirm"
+            "confirm": "Confirm",
+            "import_blocks": "Import"
         }
     },
     pt: {
@@ -132,7 +133,8 @@ export const resources = {
             "createBlock.error": "Erro ao criar o bloco:",
 
             "cancel": "Cancelar",
-            "confirm": "Confirmar"
+            "confirm": "Confirmar",
+            "import_blocks": "Importar"
         }
     },
     es: {
@@ -200,7 +202,8 @@ export const resources = {
             "createBlock.error": "Error al crear el bloque:",
 
             "cancel": "Cancelar",
-            "confirm": "Confirmar"
+            "confirm": "Confirmar",
+            "import_blocks": "Importar"
         }
     } 
 };

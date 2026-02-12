@@ -7,6 +7,7 @@ use crate::models::fields::Field;
 use crate::models::files::Block;
 use crate::models::settings::Settings;
 use crate::controllers::export_files::*;
+use crate::controllers::import_files::import_file;
 use uuid::Uuid;
 
 #[tauri::command]
@@ -111,6 +112,23 @@ fn export_as(file: Block, format: &str) -> Result<String, String> {
     }
 }
 
+#[tauri::command]
+fn import_from_file() {
+    let new_block = match import_file() {
+        Ok(block) => block,
+        Err(e) => {
+            println!("Import error: {}", e);
+            return;
+        }
+    };
+    let mut all_files: Vec<Block> = match get_json_data() {
+        Some(data) => data,
+        None => Vec::new(),
+    };
+    all_files.push(new_block);
+    save_json_data(&all_files);
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -123,7 +141,8 @@ pub fn run() {
             get_settings,
             save_settings,
             export_as,
-            delete_file
+            delete_file,
+            import_from_file
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -60,6 +60,12 @@ export default function Index() {
         >
           {t("new_block")}
         </button>
+        <button className="secondary-btn" onClick={() => {
+          invoke("import_from_file");
+          fetchBlocks();
+        }}>
+          {t("import_blocks")}
+        </button>
         <button
           className="secondary-btn"
           onClick={() => {
