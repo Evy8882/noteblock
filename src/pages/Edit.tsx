@@ -335,6 +335,7 @@ export default function EditFile() {
           type="text"
           id="file-title"
           name="file-title"
+          onFocus={() => setFocusFieldId(null)}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
